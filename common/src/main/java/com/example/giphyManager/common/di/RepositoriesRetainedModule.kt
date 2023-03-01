@@ -13,5 +13,5 @@ import dagger.hilt.android.scopes.ActivityRetainedScoped
 internal abstract class RepositoriesRetainedModule {
     @Binds
     @ActivityRetainedScoped
-    abstract fun bindGifRepository(repository: GifRepository): GifRepositoryImpl
+    abstract fun bindGifRepository(repository: GifRepositoryImpl): GifRepository
 }
