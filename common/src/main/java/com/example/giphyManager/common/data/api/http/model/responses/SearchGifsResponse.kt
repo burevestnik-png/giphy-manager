@@ -7,7 +7,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class SearchGifsResponse(
+internal data class SearchGifsResponse(
     @field:Json(name = "data") val gifs: List<ApiGif>,
     @field:Json(name = "pagination") val pagination: ApiPagination,
     @field:Json(name = "meta") val meta: ApiMeta
