@@ -11,4 +11,11 @@ internal interface GifApi {
         @Query("api_key") apiKey: String,
         @Query("q") query: String
     ): SearchGifsResponse
+
+    @GET(ApiConstants.GIF_TRENDING_ENDPOINT)
+    suspend fun searchTrending(
+        @Query("api_key") apiKey: String,
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int,
+    ): SearchGifsResponse
 }

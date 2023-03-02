@@ -1,19 +1,20 @@
 package com.example.giphyManager.list.presentation
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.giphyManager.common.presentation.components.base.BaseFragment
 import com.example.giphyManager.list.R
+import com.example.giphyManager.list.databinding.FragmentListBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ListFragment : Fragment() {
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_list, container, false)
+class ListFragment :
+    BaseFragment<ListFragmentViewModel, FragmentListBinding>(R.layout.fragment_list) {
+
+    override val binding: FragmentListBinding by viewBinding(FragmentListBinding::bind)
+    override val viewModel: ListFragmentViewModel by viewModels()
+
+    override fun processInitialRequests() {
+        viewModel.onEvent(ListFragmentEvent.RequestNextPage)
     }
 }

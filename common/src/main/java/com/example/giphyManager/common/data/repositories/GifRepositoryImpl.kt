@@ -16,7 +16,7 @@ internal class GifRepositoryImpl @Inject constructor(
     private val apiGifMapper: ApiGifMapper,
     private val apiPaginationMapper: ApiPaginationMapper,
 ) : GifRepository {
-    override suspend fun requestGetPaginatedChats(
+    override suspend fun requestSearchPaginatedChats(
         pageNumber: Int,
         pageSize: Int
     ): Pair<Pagination, List<Gif>> = try {
@@ -33,4 +33,18 @@ internal class GifRepositoryImpl @Inject constructor(
         Timber.e(exception)
         throw exception
     }
+
+    override suspend fun requestGetTrendingPaginatedChats(
+        limit: Int,
+        offset: Int,
+    ): Pair<Pagination, List<Gif>> = runCatching {
+        val response = gifApi.searchTrending(ApiConstants.API_KEY, limit, offset)
+
+        Pair(
+            first = apiPaginationMapper.mapToDomain(response.pagination),
+            second = response.gifs.map { apiGifMapper.mapToDomain(it) }
+        )
+    }.onFailure {
+        Timber.e(it)
+    }.getOrThrow()
 }

@@ -15,7 +15,6 @@ internal class ApiGifMapper @Inject constructor() : ApiMapper<ApiGif, Gif> {
             userName = userName,
             rating = rating,
             title = title,
-            altText = altText
         )
     }
 }

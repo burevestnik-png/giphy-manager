@@ -6,14 +6,17 @@ import com.example.giphyManager.list.domain.model.UiGif
 import com.example.giphyManager.list.domain.model.mappers.UiGifMapper
 import javax.inject.Inject
 
-class RequestNextGifPage @Inject constructor(
+class RequestNextTrendingGifPage @Inject constructor(
     private val uiGifMapper: UiGifMapper,
     private val gifRepository: GifRepository,
 ) {
-    suspend operator fun invoke(): Pair<Pagination, List<UiGif>> {
-        val (pagination, gifs) = gifRepository.requestSearchPaginatedChats(
-            pageNumber = 1,
-            pageSize = 3
+    suspend operator fun invoke(
+        limit: Int,
+        offset: Int,
+    ): Pair<Pagination, List<UiGif>> {
+        val (pagination, gifs) = gifRepository.requestGetTrendingPaginatedChats(
+            limit,
+            offset,
         )
 
         return Pair(
