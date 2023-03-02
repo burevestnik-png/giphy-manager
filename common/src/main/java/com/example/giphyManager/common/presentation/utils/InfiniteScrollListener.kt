@@ -2,6 +2,7 @@ package com.example.giphyManager.common.presentation.utils
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import timber.log.Timber
 
 abstract class InfiniteScrollListener(
     private val layoutManager: LinearLayoutManager,
@@ -13,14 +14,14 @@ abstract class InfiniteScrollListener(
 
         val visibleItemCount = layoutManager.childCount
         val totalItemCount = layoutManager.itemCount
-        val firstVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+        val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+        Timber.d("onScrolled: $visibleItemCount $totalItemCount $firstVisibleItemPosition $pageSize ${isLastPage()} ${isLoading()}")
 
 
         if (!isLoading() && !isLastPage()) {
-            if (
-                (visibleItemCount + (totalItemCount - firstVisibleItemPosition)) >= totalItemCount &&
-                firstVisibleItemPosition >= 0 &&
-                totalItemCount >= pageSize
+            if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                && firstVisibleItemPosition >= 0
+                && totalItemCount >= pageSize
             ) {
                 loadMoreItems()
             }

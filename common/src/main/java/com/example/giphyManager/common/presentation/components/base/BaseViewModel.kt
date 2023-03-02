@@ -6,6 +6,7 @@ import com.example.giphyManager.common.presentation.components.extensions.create
 import com.example.giphyManager.common.presentation.model.Event
 import com.example.giphyManager.common.presentation.model.UIState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -40,9 +41,9 @@ abstract class BaseViewModel<T>(payload: T) : ViewModel() {
         coroutineContext: CoroutineContext = Dispatchers.IO,
         errorMessage: String = "Failed to make request",
         request: suspend () -> Unit
-    ) {
+    ): Job {
         val exceptionHandler = viewModelScope.createExceptionHandler(errorMessage) { onFailure(it) }
-        viewModelScope.launch(exceptionHandler + coroutineContext) { request() }
+        return viewModelScope.launch(exceptionHandler + coroutineContext) { request() }
     }
 
     protected fun withLoading(block: () -> Unit) {

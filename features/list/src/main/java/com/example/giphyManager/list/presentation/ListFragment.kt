@@ -34,6 +34,12 @@ class ListFragment :
     override fun setupUI() {
         adapter = setupGifAdapter()
         setupRecyclerView(adapter)
+
+        listenToListPulling()
+    }
+
+    private fun listenToListPulling() {
+        binding.swipeLayout.setOnRefreshListener { requestResetPagination() }
     }
 
     private fun setupGifAdapter() =
@@ -47,15 +53,14 @@ class ListFragment :
         binding.recyclerView.apply {
             this.adapter = adapter
             layoutManager = LinearLayoutManager(context)
-//            addOnScrollListener(createOnScrollListener(layoutManager as LinearLayoutManager))
+            addOnScrollListener(createOnScrollListener(layoutManager as LinearLayoutManager))
         }
     }
 
     private fun createOnScrollListener(
         layoutManager: LinearLayoutManager,
     ): RecyclerView.OnScrollListener {
-        return object :
-            InfiniteScrollListener(layoutManager, ListFragmentViewModel.UI_PAGE_SIZE) {
+        return object : InfiniteScrollListener(layoutManager, ListFragmentViewModel.UI_PAGE_SIZE) {
             override fun loadMoreItems() = requestNextPage()
             override fun isLastPage(): Boolean = viewModel.isLastPage
             override fun isLoading(): Boolean = viewModel.state.value.loading
@@ -71,8 +76,11 @@ class ListFragment :
     }
 
     private fun updateScreenState(state: UIState<ListFragmentPayload>) {
-        Timber.d("updateScreenState: $state")
+        Timber.d("updateScreenState: ${state.loading}")
+
+        binding.swipeLayout.isRefreshing = state.loading
         adapter.updateGifs(state.payload.gifs)
+
         handleFailures(state.failure)
     }
 
@@ -82,6 +90,10 @@ class ListFragment :
 
     private fun requestNextPage() {
         viewModel.onEvent(ListFragmentEvent.RequestNextPage)
+    }
+
+    private fun requestResetPagination() {
+        viewModel.onEvent(ListFragmentEvent.ResetPagination)
     }
 
 }

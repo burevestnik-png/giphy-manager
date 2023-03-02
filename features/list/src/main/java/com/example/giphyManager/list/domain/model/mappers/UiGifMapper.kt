@@ -10,7 +10,8 @@ class UiGifMapper @Inject constructor() : UiMapper<Gif, UiGif> {
     override fun mapToView(model: Gif): UiGif = with(model) {
         UiGif(
             id = id,
-            url = embedUrl
+            url = image.url,
+            title = title
         )
     }
 }

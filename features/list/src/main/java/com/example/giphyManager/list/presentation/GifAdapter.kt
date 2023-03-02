@@ -3,7 +3,10 @@ package com.example.giphyManager.list.presentation
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
+import com.bumptech.glide.annotation.GlideModule
+import com.bumptech.glide.module.AppGlideModule
 import com.example.giphyManager.list.R
 import com.example.giphyManager.list.databinding.ListItemGifBinding
 import com.example.giphyManager.list.domain.model.UiGif
@@ -14,14 +17,15 @@ fun interface GifClickListener {
 }
 
 class GifAdapter(
-    private val gifs: MutableList<UiGif> = mutableListOf(),
+    private var gifs: List<UiGif> = emptyList(),
     private val onClickListener: GifClickListener
 ) : RecyclerView.Adapter<GifAdapter.UiGifViewHolder>() {
 
     fun updateGifs(gifs: List<UiGif>) {
-        this.gifs.clear()
-        this.gifs.addAll(gifs)
-        notifyDataSetChanged()
+        if (gifs.size != this.gifs.size || gifs.firstOrNull()?.equals(this.gifs.firstOrNull()) == false) {
+            this.gifs = gifs
+            notifyDataSetChanged()
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UiGifViewHolder =
@@ -38,14 +42,13 @@ class GifAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(uiGif: UiGif) {
-            Timber.d(uiGif.url)
             binding.apply {
-                title.text = uiGif.id
+                title.text = uiGif.title
 
                 Glide
                     .with(binding.root.context)
                     .asGif()
-                    .load("https://media3.giphy.com/media/ZPRG8yKKLXiuSlo2q1/200w.gif?cid=4738eb2160goxon53jfrjd239co00gm9fp1xutzjybtg560m&rid=200w.gif&ct=g")
+                    .load(uiGif.url)
                     .into(gif)
             }
         }
