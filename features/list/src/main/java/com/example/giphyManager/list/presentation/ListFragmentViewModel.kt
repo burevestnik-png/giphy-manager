@@ -2,10 +2,16 @@ package com.example.giphyManager.list.presentation
 
 import com.example.giphyManager.common.domain.model.Pagination
 import com.example.giphyManager.common.presentation.components.base.BaseViewModel
+import com.example.giphyManager.list.domain.usecases.RequestNextGifPage
 import dagger.hilt.android.lifecycle.HiltViewModel
+import timber.log.Timber
+import javax.inject.Inject
 
 @HiltViewModel
-class ListFragmentViewModel : BaseViewModel<ListFragmentPayload>(ListFragmentPayload()) {
+class ListFragmentViewModel @Inject constructor(
+    private val requestNextGifPage: RequestNextGifPage
+) :
+    BaseViewModel<ListFragmentPayload>(ListFragmentPayload()) {
 
     companion object {
         const val UI_PAGE_SIZE = Pagination.DEFAULT_PAGE_SIZE
@@ -19,7 +25,12 @@ class ListFragmentViewModel : BaseViewModel<ListFragmentPayload>(ListFragmentPay
     }
 
     private fun handleRequestingNextPage() = withLoading {
-
+        launchIORequest {
+            val (pagination, gifs) = requestNextGifPage()
+            gifs.forEach {
+                Timber.d(it.toString())
+            }
+        }
     }
 
     override fun onFailure(throwable: Throwable) {
