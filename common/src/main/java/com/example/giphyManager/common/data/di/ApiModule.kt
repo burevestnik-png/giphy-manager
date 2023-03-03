@@ -2,6 +2,7 @@ package com.example.giphyManager.common.data.di
 
 import com.example.giphyManager.common.data.api.ApiConstants
 import com.example.giphyManager.common.data.api.http.model.GifApi
+import com.example.giphyManager.common.data.api.interceptors.LoggingInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,8 +23,10 @@ internal object ApiModule {
         builder.build().create(GifApi::class.java)
 
     @Provides
-    fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor =
-        HttpLoggingInterceptor().apply {
+    fun provideHttpLoggingInterceptor(
+        loggingInterceptor: LoggingInterceptor
+    ): HttpLoggingInterceptor =
+        HttpLoggingInterceptor(loggingInterceptor).apply {
             level = HttpLoggingInterceptor.Level.BASIC
         }
 

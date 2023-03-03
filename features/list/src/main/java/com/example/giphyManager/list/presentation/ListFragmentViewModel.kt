@@ -2,7 +2,9 @@ package com.example.giphyManager.list.presentation
 
 import com.example.giphyManager.common.domain.model.Gif
 import com.example.giphyManager.common.domain.model.Pagination
+import com.example.giphyManager.common.domain.model.exceptions.NoMoreItemsException
 import com.example.giphyManager.common.presentation.components.base.BaseViewModel
+import com.example.giphyManager.common.presentation.model.Event
 import com.example.giphyManager.list.domain.model.mappers.UiGifMapper
 import com.example.giphyManager.list.domain.usecases.RequestNextGifPage
 import com.example.giphyManager.list.domain.usecases.RequestNextTrendingGifPage
@@ -97,6 +99,12 @@ class ListFragmentViewModel @Inject constructor(
     }
 
     override fun onFailure(throwable: Throwable) {
-        Timber.e(throwable)
+        when (throwable) {
+            is NoMoreItemsException -> {
+                modifyState(loading = false, failure = Event(throwable)) { payload ->
+                    payload.copy(noMoreGifsAnymore = true)
+                }
+            }
+        }
     }
 }

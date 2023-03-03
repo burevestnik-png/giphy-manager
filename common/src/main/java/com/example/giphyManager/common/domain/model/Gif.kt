@@ -9,5 +9,4 @@ data class Gif(
     val rating: String,
     val title: String,
     val image: Image,
-    val user: User
 )

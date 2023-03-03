@@ -4,4 +4,7 @@
     <string name="nav_details_label">Details</string>
     <string name="user_avatar">User avatar</string>
     <string name="gif">Gif</string>
+    <string name="gif_url">Gif URL:</string>
+    <string name="source_url">Source URL:</string>
+    <string name="rating">Rating:</string>
 </resources>

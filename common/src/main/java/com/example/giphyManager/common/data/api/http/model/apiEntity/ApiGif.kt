@@ -26,5 +26,4 @@ internal data class ApiGif(
     @field:Json(name = "rating") val rating: String,
     @field:Json(name = "title") val title: String,
     @field:Json(name = "images") val images: ApiImages,
-    @field:Json(name = "user") val user: ApiUser
 )

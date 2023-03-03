@@ -7,7 +7,6 @@ import com.example.giphyManager.common.data.api.http.model.mappers.ApiPagination
 import com.example.giphyManager.common.domain.model.Gif
 import com.example.giphyManager.common.domain.model.Pagination
 import com.example.giphyManager.common.domain.repositories.GifRepository
-import retrofit2.HttpException
 import timber.log.Timber
 import javax.inject.Inject
 
