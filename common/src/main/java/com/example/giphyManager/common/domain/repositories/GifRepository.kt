@@ -5,12 +5,15 @@ import com.example.giphyManager.common.domain.model.Pagination
 
 interface GifRepository {
     suspend fun requestSearchPaginatedChats(
-        pageNumber: Int,
-        pageSize: Int
+        limit: Int,
+        offset: Int,
+        query: String
     ): Pair<Pagination, List<Gif>>
 
     suspend fun requestGetTrendingPaginatedChats(
         limit: Int,
         offset: Int,
     ): Pair<Pagination, List<Gif>>
+
+    suspend fun requestGetGifById(id: Int): Gif
 }

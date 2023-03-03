@@ -1,5 +1,6 @@
 package com.example.giphyManager.list.presentation
 
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -36,6 +37,7 @@ class ListFragment :
         setupRecyclerView(adapter)
 
         listenToListPulling()
+        setupSearchViewListener()
     }
 
     private fun listenToListPulling() {
@@ -67,6 +69,23 @@ class ListFragment :
         }
     }
 
+    private fun setupSearchViewListener() {
+        binding.search.setOnQueryTextListener(
+            object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    requestNewQueryInput(query.orEmpty())
+                    binding.search.clearFocus()
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    requestNewQueryInput(newText.orEmpty())
+                    return true
+                }
+            }
+        )
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // STATE OBSERVING
     ///////////////////////////////////////////////////////////////////////////
@@ -94,6 +113,10 @@ class ListFragment :
 
     private fun requestResetPagination() {
         viewModel.onEvent(ListFragmentEvent.ResetPagination)
+    }
+
+    private fun requestNewQueryInput(query: String) {
+        viewModel.onEvent(ListFragmentEvent.QueryInput(query))
     }
 
 }

@@ -17,22 +17,24 @@ internal class GifRepositoryImpl @Inject constructor(
     private val apiPaginationMapper: ApiPaginationMapper,
 ) : GifRepository {
     override suspend fun requestSearchPaginatedChats(
-        pageNumber: Int,
-        pageSize: Int
-    ): Pair<Pagination, List<Gif>> = try {
+        limit: Int,
+        offset: Int,
+        query: String
+    ): Pair<Pagination, List<Gif>> = runCatching {
         val response = gifApi.search(
             apiKey = ApiConstants.API_KEY,
-            query = ""
+            limit = limit,
+            offset = offset,
+            query = query
         )
 
         Pair(
             first = apiPaginationMapper.mapToDomain(response.pagination),
             second = response.gifs.map { apiGifMapper.mapToDomain(it) }
         )
-    } catch (exception: HttpException) {
-        Timber.e(exception)
-        throw exception
-    }
+    }.onFailure {
+        Timber.e(it)
+    }.getOrThrow()
 
     override suspend fun requestGetTrendingPaginatedChats(
         limit: Int,
@@ -44,6 +46,13 @@ internal class GifRepositoryImpl @Inject constructor(
             first = apiPaginationMapper.mapToDomain(response.pagination),
             second = response.gifs.map { apiGifMapper.mapToDomain(it) }
         )
+    }.onFailure {
+        Timber.e(it)
+    }.getOrThrow()
+
+    override suspend fun requestGetGifById(id: Int): Gif = runCatching {
+        val response = gifApi.getGifById(id, ApiConstants.API_KEY)
+        apiGifMapper.mapToDomain(response.gif)
     }.onFailure {
         Timber.e(it)
     }.getOrThrow()

@@ -10,10 +10,14 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class DetailsFragment : Fragment() {
+
+    private var gifId: Int? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        arguments?.let { gifId = it.getInt(ARG_ID) }
         return inflater.inflate(R.layout.fragment_details, container, false)
     }
 }

@@ -32,10 +32,12 @@ class ListFragmentViewModel @Inject constructor(
         private set
 
     private var remoteSearchJob: Job = Job()
+    private var query: String = ""
 
     fun onEvent(event: ListFragmentEvent) = when (event) {
         is ListFragmentEvent.RequestNextPage -> handleRequestingNextPage()
         is ListFragmentEvent.ResetPagination -> handleResetPagination()
+        is ListFragmentEvent.QueryInput ->  handleNewQueryInput(event)
     }
 
     private fun handleRequestingNextPage() {
@@ -43,10 +45,18 @@ class ListFragmentViewModel @Inject constructor(
         remoteSearchJob = launchIORequest {
             showLoader()
 
-            val (pagination, gifs) = requestNextTrendingGifPage(
-                limit = currentPageSize,
-                offset = currentPage * currentPageSize
-            )
+            val (pagination, gifs) = if (query.isNotEmpty()) {
+                requestNextGifPage(
+                    limit = currentPageSize,
+                    offset = currentPage * currentPageSize,
+                    query = query
+                )
+            } else {
+                requestNextTrendingGifPage(
+                    limit = currentPageSize,
+                    offset = currentPage * currentPageSize
+                )
+            }
 
             updatePagingInfo(pagination)
             onNewGifList(gifs)
@@ -61,6 +71,14 @@ class ListFragmentViewModel @Inject constructor(
         val updatedList = currentGifs + gifsFromServer
 
         modifyState(loading = false) { payload -> payload.copy(gifs = updatedList) }
+    }
+
+    private fun handleNewQueryInput(event: ListFragmentEvent.QueryInput) {
+        if (event.query == query) return
+
+        query = event.query
+        modifyState { payload -> payload.copy(gifs = emptyList()) }
+        handleResetPagination()
     }
 
     private fun handleResetPagination() {

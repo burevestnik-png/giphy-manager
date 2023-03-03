@@ -8,9 +8,12 @@ import javax.inject.Inject
 class RequestNextGifPage @Inject constructor(
     private val gifRepository: GifRepository,
 ) {
-    suspend operator fun invoke(): Pair<Pagination, List<Gif>> =
+    suspend operator fun invoke(
+        limit: Int,
+        offset: Int,
+        query: String
+    ): Pair<Pagination, List<Gif>> =
         gifRepository.requestSearchPaginatedChats(
-            pageNumber = 1,
-            pageSize = 3
+            limit, offset, query
         )
 }
