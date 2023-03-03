@@ -25,7 +25,7 @@ internal interface GifApi {
 
     @GET(ApiConstants.GIF_BY_ID_ENDPOINT)
     suspend fun getGifById(
-        @Path("id") id: Int,
+        @Path("id") id: String,
         @Query("api_key") apiKey: String,
     ): GetByIdResponse
 }

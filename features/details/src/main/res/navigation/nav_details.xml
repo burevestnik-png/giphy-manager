@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:startDestination="@id/detailsFragment"
-    android:id="@+id/nav_details">
+    android:id="@+id/nav_details"
+    app:startDestination="@id/detailsFragment">
 
     <fragment
         android:id="@+id/detailsFragment"
         android:name="com.example.giphyManager.details.presentation.DetailsFragment"
         android:label="@string/nav_details_label">
+
+        <argument
+            android:name="id"
+            app:argType="string" />
+
         <deepLink
             android:id="@+id/deepLink"
-            app:uri="giphyApp://details" />
+            app:uri="giphyApp://details?id={id}" />
     </fragment>
 
 </navigation>

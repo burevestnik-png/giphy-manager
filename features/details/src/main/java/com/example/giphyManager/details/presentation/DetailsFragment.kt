@@ -1,23 +1,35 @@
 package com.example.giphyManager.details.presentation
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.giphyManager.common.presentation.components.base.BaseFragment
 import com.example.giphyManager.details.R
+import com.example.giphyManager.details.databinding.FragmentDetailsBinding
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
+
+private const val GIF_ID = "id"
 
 @AndroidEntryPoint
-class DetailsFragment : Fragment() {
+class DetailsFragment :
+    BaseFragment<DetailsFragmentViewModel, FragmentDetailsBinding>(R.layout.fragment_details) {
 
-    private var gifId: Int? = null
+    override val viewModel: DetailsFragmentViewModel by viewModels()
+    override val binding: FragmentDetailsBinding by viewBinding(FragmentDetailsBinding::bind)
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        arguments?.let { gifId = it.getInt(ARG_ID) }
-        return inflater.inflate(R.layout.fragment_details, container, false)
+    private var gifId: String? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let { gifId = it.getString(GIF_ID) }
+    }
+
+    override fun processInitialRequests() {
+        requestGetGif(gifId!!)
+    }
+
+    private fun requestGetGif(id: String) {
+        viewModel.onEvent(DetailsFragmentEvent.GetGif(id))
     }
 }

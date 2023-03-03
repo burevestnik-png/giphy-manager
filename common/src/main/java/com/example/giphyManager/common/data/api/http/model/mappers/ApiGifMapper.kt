@@ -6,7 +6,8 @@ import com.example.giphyManager.common.domain.model.Gif
 import javax.inject.Inject
 
 internal class ApiGifMapper @Inject constructor(
-    private val apiImageMapper: ApiImageMapper
+    private val apiUserMapper: ApiUserMapper,
+    private val apiImageMapper: ApiImageMapper,
 ) : ApiMapper<ApiGif, Gif> {
     override fun mapToDomain(apiEntity: ApiGif): Gif = with(apiEntity) {
         Gif(
@@ -17,7 +18,8 @@ internal class ApiGifMapper @Inject constructor(
             userName = userName,
             rating = rating,
             title = title,
-            image = apiImageMapper.mapToDomain(apiEntity.images)
+            image = apiImageMapper.mapToDomain(apiEntity.images),
+            user = apiUserMapper.mapToDomain(apiEntity.user)
         )
     }
 }

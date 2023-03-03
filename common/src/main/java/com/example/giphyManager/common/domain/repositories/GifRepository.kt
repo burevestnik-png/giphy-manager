@@ -15,5 +15,5 @@ interface GifRepository {
         offset: Int,
     ): Pair<Pagination, List<Gif>>
 
-    suspend fun requestGetGifById(id: Int): Gif
+    suspend fun requestGetGifById(id: String): Gif
 }

@@ -50,7 +50,7 @@ internal class GifRepositoryImpl @Inject constructor(
         Timber.e(it)
     }.getOrThrow()
 
-    override suspend fun requestGetGifById(id: Int): Gif = runCatching {
+    override suspend fun requestGetGifById(id: String): Gif = runCatching {
         val response = gifApi.getGifById(id, ApiConstants.API_KEY)
         apiGifMapper.mapToDomain(response.gif)
     }.onFailure {

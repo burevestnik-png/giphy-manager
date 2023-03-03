@@ -8,8 +8,11 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.giphyManager.common.presentation.components.base.BaseFragment
 import com.example.giphyManager.common.presentation.components.extensions.handleFailures
 import com.example.giphyManager.common.presentation.components.extensions.launchViewModelsFlow
+import com.example.giphyManager.common.presentation.components.extensions.navigate
 import com.example.giphyManager.common.presentation.model.UIState
 import com.example.giphyManager.common.presentation.utils.InfiniteScrollListener
+import com.example.giphyManager.common.utils.Route
+import com.example.giphyManager.common.utils.Routes
 import com.example.giphyManager.list.R
 import com.example.giphyManager.list.databinding.FragmentListBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,12 +47,12 @@ class ListFragment :
         binding.swipeLayout.setOnRefreshListener { requestResetPagination() }
     }
 
-    private fun setupGifAdapter() =
-        GifAdapter(
-            onClickListener = {
-                Timber.d("q")
-            }
-        )
+    private fun setupGifAdapter() = GifAdapter(onClickListener = {
+        navigate(Route.build {
+            screen = Routes.DETAILS
+            addQueryParam("id", it)
+        })
+    })
 
     private fun setupRecyclerView(adapter: GifAdapter) {
         binding.recyclerView.apply {
@@ -70,20 +73,18 @@ class ListFragment :
     }
 
     private fun setupSearchViewListener() {
-        binding.search.setOnQueryTextListener(
-            object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    requestNewQueryInput(query.orEmpty())
-                    binding.search.clearFocus()
-                    return true
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    requestNewQueryInput(newText.orEmpty())
-                    return true
-                }
+        binding.search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                requestNewQueryInput(query.orEmpty())
+                binding.search.clearFocus()
+                return true
             }
-        )
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                requestNewQueryInput(newText.orEmpty())
+                return true
+            }
+        })
     }
 
     ///////////////////////////////////////////////////////////////////////////

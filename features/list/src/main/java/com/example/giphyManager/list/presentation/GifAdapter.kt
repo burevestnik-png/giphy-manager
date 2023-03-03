@@ -3,17 +3,12 @@ package com.example.giphyManager.list.presentation
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
-import com.bumptech.glide.annotation.GlideModule
-import com.bumptech.glide.module.AppGlideModule
-import com.example.giphyManager.list.R
 import com.example.giphyManager.list.databinding.ListItemGifBinding
 import com.example.giphyManager.list.domain.model.UiGif
-import timber.log.Timber
 
 fun interface GifClickListener {
-    fun onGifClick()
+    fun onGifClick(id: String)
 }
 
 class GifAdapter(
@@ -22,7 +17,9 @@ class GifAdapter(
 ) : RecyclerView.Adapter<GifAdapter.UiGifViewHolder>() {
 
     fun updateGifs(gifs: List<UiGif>) {
-        if (gifs.size != this.gifs.size || gifs.firstOrNull()?.equals(this.gifs.firstOrNull()) == false) {
+        if (gifs.size != this.gifs.size || gifs.firstOrNull()
+                ?.equals(this.gifs.firstOrNull()) == false
+        ) {
             this.gifs = gifs
             notifyDataSetChanged()
         }
@@ -50,6 +47,10 @@ class GifAdapter(
                     .asGif()
                     .load(uiGif.url)
                     .into(gif)
+            }
+
+            binding.root.setOnClickListener {
+                onClickListener.onGifClick(uiGif.id)
             }
         }
     }
